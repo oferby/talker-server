@@ -54,10 +54,53 @@ function showChatbot() {
     }
 }
 
+function addUserInput(text) {
+
+    $('#smartbotBody').append('<div class="messageBox outgoing"><div class="messageText">'+text+'</div><div class="messageTime">'+getTime()+'</div></div>');
+
+}
+
+function scroll_window(){
+    var element = document.getElementById("smartbotBody");
+    element.scrollTop = element.scrollHeight - element.clientHeight;
+
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function addBotText(text) {
+
+    $('#smartbotBody').append('<div class="messageBox incoming"><div class="messageText">'+text+'</div><div class="messageTime">'+getTime()+'</div></div>');
+
+}
 
 
 
+function addBotResponse(dialogue){
 
+    async function displayWait() {
+
+        $('#smartbotBody').append('<div id="waiting-div" class="messageBox incoming"><div class="messageText"><div class="waiting"><img src="/images/waiting.gif" alt="Enter"></div></div></div>');
+        scroll_window();
+        await sleep(1500);
+        $('#waiting-div').remove();
+
+         var text = dialogue.text
+         addBotText(text);
+
+//         var urlUp = dialogue.feedbackUrl+'/up';
+//         var urlDown = dialogue.feedbackUrl+'/down';
+//
+//        $('#history').append('<div class="bot-text-line"><span class="bot-text">Was this helpful?</span><img class="feedback-btn" src="/images/up.png" onclick="javascript:sendFeedback('+urlUp+')"><img src="/images/down.png" class="feedback-btn" onclick="javascript:sendFeedback('+urlDown+')"></div>');
+        scroll_window();
+
+    }
+
+    displayWait()
+
+}
 
 $(document).ready( function(){
 

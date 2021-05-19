@@ -1,5 +1,6 @@
 package com.toga.talker.web;
 
+import com.toga.talker.model.Dialogue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class WebSocketController {
     private SimpMessagingTemplate template;
 
     @MessageMapping("/parseDialogue")
-    public void getMessage() {
-
+    public void getMessage(Dialogue dialogue) {
+        logger.debug("got new message: " + dialogue.getText());
     }
 
 
