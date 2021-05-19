@@ -19,7 +19,12 @@ public class WebSocketController {
     @MessageMapping("/parseDialogue")
     public void getMessage(Dialogue dialogue) {
         logger.debug("got new message: " + dialogue.getText());
+
+        dialogue.setText("you said: " + dialogue.getText());
+        sendResponse(dialogue);
     }
 
-
+    private void sendResponse(Dialogue dialogueResponse) {
+        template.convertAndSend("/topic/dialogue", dialogueResponse);
+    }
 }
