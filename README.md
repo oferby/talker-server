@@ -22,5 +22,12 @@ neo4j:latest
 ### Knowledge Graph
 https://towardsdatascience.com/language-models-are-open-knowledge-graphs-but-are-hard-to-mine-13e128f3d64d
 
+### PyTorch BigGraph
+https://towardsdatascience.com/extracting-knowledge-from-knowledge-graphs-e5521e4861a0
+https://arxiv.org/pdf/1903.12287.pdf
+
+### CoreNLP
+https://stanfordnlp.github.io/CoreNLP/
+
 
 
