@@ -1,7 +1,7 @@
 package com.toga.talker;
 
-import com.toga.talker.model.db.NodeEntity;
 import com.toga.talker.model.db.NodeEntityRepository;
+import com.toga.talker.model.db.entities.Thing;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,20 @@ public class TestNeo4j {
 
         assert nodeEntityRepository != null;
 
-        List<NodeEntity> all = nodeEntityRepository.findAll();
+        List<Thing> all = nodeEntityRepository.findAll();
 
         assert  !all.isEmpty();
 
     }
 
+    @Test
+    public void deleteAll() {
+        nodeEntityRepository.deleteAll();
+
+        List<Thing> all = nodeEntityRepository.findAll();
+
+        assert  all.isEmpty();
+
+    }
 
 }
