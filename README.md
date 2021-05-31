@@ -29,5 +29,26 @@ https://arxiv.org/pdf/1903.12287.pdf
 ### CoreNLP
 https://stanfordnlp.github.io/CoreNLP/
 
+## Ontology
+
+https://www.w3.org/wiki/Ontology_repositories
+
+### Neo4j 
+https://neo4j.com/developer/graph-data-science/build-knowledge-graph-nlp-ontologies/#import-onologies
+
+### Network Ontology
+https://intranet.icar.cnr.it/wp-content/uploads/2016/11/TechReport-03_22.pdf
+
+### Wikidata:SPARQL query service
+https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service
+
+
+### Tools
+
+### REL
+https://github.com/informagi/REL
+
+### spaCy
+https://spacy.io/
 
 
