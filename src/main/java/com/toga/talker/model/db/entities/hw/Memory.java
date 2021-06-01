@@ -14,15 +14,17 @@ public class Memory extends Hardware {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public Memory setAmount(Integer amount) {
         this.amount = amount;
+        return this;
     }
 
     public DataSizeUnits getDataSizeUnits() {
         return dataSizeUnits;
     }
 
-    public void setDataSizeUnits(DataSizeUnits dataSizeUnits) {
+    public Memory setDataSizeUnits(DataSizeUnits dataSizeUnits) {
         this.dataSizeUnits = dataSizeUnits;
+        return this;
     }
 }

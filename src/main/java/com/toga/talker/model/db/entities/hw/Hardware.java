@@ -1,8 +1,8 @@
 package com.toga.talker.model.db.entities.hw;
 
-import com.toga.talker.model.db.entities.Thing;
+import com.toga.talker.model.db.entities.Element;
 
-public abstract class Hardware extends Thing {
+public abstract class Hardware extends Element {
 
 
 }

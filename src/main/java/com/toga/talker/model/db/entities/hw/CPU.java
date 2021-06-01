@@ -8,7 +8,8 @@ public class CPU extends Hardware {
         return vendor;
     }
 
-    public void setVendor(String vendor) {
+    public CPU setVendor(String vendor) {
         this.vendor = vendor;
+        return this;
     }
 }

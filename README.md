@@ -42,6 +42,8 @@ https://intranet.icar.cnr.it/wp-content/uploads/2016/11/TechReport-03_22.pdf
 ### Wikidata:SPARQL query service
 https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service
 
+### Spell Checker
+http://theautomatic.net/2019/12/10/3-packages-to-build-a-spell-checker-in-python/
 
 ### Tools
 

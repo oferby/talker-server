@@ -2,8 +2,7 @@ package com.toga.talker.model.db.entities;
 
 import org.springframework.data.neo4j.core.schema.*;
 
-@Node("Thing")
-public abstract class Thing {
+public abstract class Element {
 
     @Id @GeneratedValue
     private Long id;
