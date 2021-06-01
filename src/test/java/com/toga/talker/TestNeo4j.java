@@ -47,7 +47,9 @@ public class TestNeo4j {
     public void testAddNode() {
 
         Host host = new Host();
-        host.setCpu(new CPU().setVendor(new Vendor().setName("Intel")));
+        CPU cpu = new CPU();
+        cpu.setVendor(new Vendor().setName("Intel"));
+        host.setCpu(cpu);
         host.setMemory(new Memory().setAmount(1).setDataSizeUnits(DataSizeUnits.GB));
 
         Host host1 = nodeEntityRepository.save(host);

@@ -1,17 +1,10 @@
 package com.toga.talker.model.db.entities.hw;
 
 import com.toga.talker.model.db.entities.org.Vendor;
+import org.springframework.data.neo4j.core.schema.Node;
 
+@Node({"CPU","Element"})
 public class CPU extends Hardware {
 
-    private Vendor vendor;
 
-    public Vendor getVendor() {
-        return vendor;
-    }
-
-    public CPU setVendor(Vendor vendor) {
-        this.vendor = vendor;
-        return this;
-    }
 }

@@ -1,10 +1,10 @@
-package com.toga.talker.model.db.entities.sw;
+package com.toga.talker.model.db.entities.sw.network;
 
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 
-@Node
-public class RoutingEngine extends NetworkProcess{
+@Node({"RoutingEngine","Element","NetworkService"})
+public class RoutingEngine extends NetworkService {
 
     @Property
     private RoutingTable mainRoutingTable;

@@ -4,6 +4,7 @@ import com.toga.talker.model.db.entities.DataSizeUnits;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 
+@Node({"Memory","Element"})
 public class Memory extends Hardware {
 
     private DataSizeUnits dataSizeUnits;
