@@ -10,7 +10,7 @@ import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import java.util.ArrayList;
 import java.util.List;
 
-@Node
+@Node({"Chassis", "Element"})
 public class Chassis extends NetworkElement {
 
     @Property

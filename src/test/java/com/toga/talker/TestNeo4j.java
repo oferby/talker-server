@@ -78,7 +78,10 @@ public class TestNeo4j {
 
             for (int j = 0; j < 4; j++) {
 
-                lineCard.addNetworkInterface(new EthernetPort(), "eth" + j);
+                lineCard.addNetworkInterface(new EthernetPort()
+                        .setOperationalStatus(OperationalStatus.UP)
+                        .setName("eth" + j)
+                );
 
             }
 

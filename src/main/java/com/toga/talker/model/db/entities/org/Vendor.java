@@ -3,7 +3,7 @@ package com.toga.talker.model.db.entities.org;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 
-@Node
+@Node({"Vendor","Element"})
 public class Vendor extends OrgElement {
 
     @Property

@@ -2,33 +2,32 @@ package com.toga.talker.model.db.entities.hw;
 
 import com.toga.talker.model.db.entities.hw.inf.NetworkInterface;
 import com.toga.talker.model.db.entities.hw.inf.PortNumberProperty;
+import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Node({"LineCard","Element"})
 public class LineCard extends Hardware {
 
     @Relationship(type = "HAS", direction = Relationship.Direction.OUTGOING)
-    private List<PortNumberProperty> portNumberProperties;
+    private List<NetworkInterface> networkInterfaceList;
 
-    public List<PortNumberProperty> getPortNumberProperties() {
-        return portNumberProperties;
+    public List<NetworkInterface> getNetworkInterfaceList() {
+        return networkInterfaceList;
     }
 
-    public void setPortNumberProperties(List<PortNumberProperty> portNumberProperties) {
-        this.portNumberProperties = portNumberProperties;
+    public void setNetworkInterfaceList(List<NetworkInterface> networkInterfaceList) {
+        this.networkInterfaceList = networkInterfaceList;
     }
 
-    public LineCard addNetworkInterface(NetworkInterface networkInterface, String portId) {
-        if (portNumberProperties == null)
-            portNumberProperties = new ArrayList<>();
+    public LineCard addNetworkInterface(NetworkInterface networkInterface) {
+        if (networkInterfaceList == null)
+            networkInterfaceList = new ArrayList<>();
 
-        PortNumberProperty portNumberProperty = new PortNumberProperty()
-                .setPortId(portId)
-                .setNetworkInterface(networkInterface);
-        portNumberProperties.add(portNumberProperty);
+        networkInterfaceList.add(networkInterface);
 
         return this;
 
