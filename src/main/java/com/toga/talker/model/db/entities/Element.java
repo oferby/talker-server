@@ -2,6 +2,7 @@ package com.toga.talker.model.db.entities;
 
 import org.springframework.data.neo4j.core.schema.*;
 
+@Node
 public abstract class Element {
 
     @Id @GeneratedValue

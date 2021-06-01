@@ -1,20 +1,14 @@
 package com.toga.talker.model.db.entities.hw;
 
-import com.toga.talker.model.db.entities.sw.Process;
-import com.toga.talker.model.db.entities.sw.Software;
-import org.springframework.data.neo4j.core.schema.*;
+import org.springframework.data.neo4j.core.schema.Property;
 
-@Node
-public class Host extends NetworkElement {
+public class MainBoard extends Hardware {
 
     @Property
     private CPU cpu;
 
     @Property
     private Memory memory;
-
-    @Relationship("RUNS")
-    private Process process;
 
     public CPU getCpu() {
         return cpu;
