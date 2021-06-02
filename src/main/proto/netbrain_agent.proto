@@ -1,0 +1,28 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package com.toga.netbrain.service;
+
+message CreateAgentRequest {
+  string nodeId = 1;
+  string host = 2;
+  string username = 3;
+  string password = 4;
+  string type = 5;
+}
+
+message CreateAgentResponse {
+  bool ack = 1;
+}
+
+message NodeDiscoveryRequest {
+  string nodeId = 1;
+}
+
+message NodeDiscoveryResponse {
+
+}
+
+service AgentService {
+  rpc createAgent (CreateAgentRequest) returns (CreateAgentResponse);
+}
+
