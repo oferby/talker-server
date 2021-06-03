@@ -1,5 +1,7 @@
 syntax = "proto3";
+
 option java_multiple_files = true;
+
 package com.toga.netbrain.service;
 
 message AgentHostInfoRequest {
@@ -29,12 +31,11 @@ message NodeDiscoveryRequest {
 
 message NodeDiscoveryResponse {
   string host = 1;
-  repeated NetElement netElement = 2;
+  repeated NetElement netElements = 2;
 }
 
 message NetElement {
-  string uri = 1;
-  string value = 2;
+  string URI = 1;
 }
 
 

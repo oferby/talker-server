@@ -8,18 +8,28 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.PostConstruct;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TestGrpc {
 
-    @Test
-    public void testAgentHostInfo() {
+    private AgentServiceGrpc.AgentServiceBlockingStub blockingStub;
+    private AgentServiceGrpc.AgentServiceStub agentServiceStub;
 
+    @PostConstruct
+    private void setup() {
         ManagedChannelBuilder<?> channelBuilder = ManagedChannelBuilder.forAddress("localhost", 51051).usePlaintext();
         ManagedChannel channel = channelBuilder.build();
 
-        AgentServiceGrpc.AgentServiceBlockingStub blockingStub = AgentServiceGrpc.newBlockingStub(channel);
-        AgentServiceGrpc.AgentServiceStub agentServiceStub = AgentServiceGrpc.newStub(channel);
+        blockingStub = AgentServiceGrpc.newBlockingStub(channel);
+        agentServiceStub = AgentServiceGrpc.newStub(channel);
+
+    }
+
+    @Test
+    public void testAgentHostInfo() {
+
 
         AgentHostInfoRequest request = AgentHostInfoRequest.newBuilder().setHostId("1").build();
 
@@ -42,6 +52,26 @@ public class TestGrpc {
 
         hostInfo = blockingStub.getHostInfo(request);
         System.out.println("Agents: " + hostInfo.getNumOfAgents());
+
+    }
+
+    @Test
+    public void nodeDiscovery() {
+
+        String host = "localhost";
+        NodeDiscoveryRequest nodeDiscoveryRequest = NodeDiscoveryRequest.newBuilder()
+                .setHost(host).build();
+
+        NodeDiscoveryResponse response = blockingStub.runDiscovery(nodeDiscoveryRequest);
+
+        assert response.getHost().equals(host);
+
+        System.out.println("Node Information:");
+
+        for (NetElement netElement : response.getNetElementsList()) {
+            System.out.println("URI: " + netElement.getURI());
+        }
+
 
     }
 
