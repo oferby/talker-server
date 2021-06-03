@@ -14,23 +14,21 @@ message AgentHostInfoResponse {
 }
 
 message CreateAgentRequest {
-  string nodeId = 1;
-  string host = 2;
-  string username = 3;
-  string password = 4;
+  string host = 1;
+  string username = 2;
+  string password = 3;
 }
 
 message CreateAgentResponse {
   bool ack = 1;
 }
 
-
 message NodeDiscoveryRequest {
-  string agentId = 1;
+  string host = 1;
 }
 
 message NodeDiscoveryResponse {
-  string agentId = 1;
+  string host = 1;
   repeated NetElement netElement = 2;
 }
 
