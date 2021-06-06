@@ -1,4 +1,4 @@
-package com.toga.netbrain.model.db.entities.agent;
+package com.toga.netbrain.agent;
 
 import com.toga.netbrain.model.db.NodeEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;

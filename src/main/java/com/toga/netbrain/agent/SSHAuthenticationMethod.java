@@ -1,6 +1,4 @@
-package com.toga.netbrain.model.db.entities.agent;
-
-import org.springframework.data.neo4j.core.schema.Property;
+package com.toga.netbrain.agent;
 
 public class SSHAuthenticationMethod extends AuthenticationMethod {
 

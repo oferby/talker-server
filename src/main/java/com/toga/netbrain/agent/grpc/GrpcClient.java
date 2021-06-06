@@ -1,4 +1,4 @@
-package com.toga.netbrain.model.db.entities.grpc;
+package com.toga.netbrain.agent.grpc;
 
 import com.toga.netbrain.service.*;
 import io.grpc.ManagedChannel;

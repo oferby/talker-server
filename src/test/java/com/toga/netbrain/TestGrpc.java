@@ -1,6 +1,6 @@
 package com.toga.netbrain;
 
-import com.toga.netbrain.model.db.entities.grpc.GrpcClient;
+import com.toga.netbrain.agent.grpc.GrpcClient;
 import com.toga.netbrain.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;

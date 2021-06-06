@@ -1,4 +1,4 @@
-package com.toga.netbrain.model.db.entities.agent;
+package com.toga.netbrain.agent;
 
 import com.toga.netbrain.model.db.entities.Element;
 import org.springframework.data.neo4j.core.schema.Node;

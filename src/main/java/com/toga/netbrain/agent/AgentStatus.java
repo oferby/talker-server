@@ -1,4 +1,4 @@
-package com.toga.netbrain.model.db.entities.agent;
+package com.toga.netbrain.agent;
 
 public enum AgentStatus {
     INIT, ALIVE, DISCONNECTED, DISABLED
