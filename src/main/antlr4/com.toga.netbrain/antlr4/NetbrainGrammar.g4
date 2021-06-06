@@ -1,4 +1,4 @@
-grammar netbrain;
+grammar NetbrainGrammar;
 
 @header {
     import java.util.*;
@@ -14,20 +14,21 @@ grammar netbrain;
 */
 
 bn  returns [Map<String,String> values] :
-        ( addNewAgentHost { $values = $addNewAgentHost.values; }
+        ( addNewHostAgent { $values = $addNewHostAgent.values; }
         | addNewAgent { $values = $addNewAgent.values; }
+        | provideUsernameAndPassword { $values = $provideUsernameAndPassword.values; }
         );
 
-addNewAgentHost returns [Map<String,String> values]
-    : ADD NEW? HOST h=(CHARS | CHARS_AND_DIGITS)
+addNewHostAgent returns [Map<String,String> values]
+    : ADD NEW? HOST AGENT? h=(CHARS | CHARS_AND_DIGITS | IPADDRESS)
         {
             $values = new HashMap<String,String>();
-            $values.put("operator", "addNewAgentHost");
+            $values.put("operator", "addNewHostAgent");
             $values.put("host", $h.text);
         };
 
 addNewAgent returns [Map<String,String> values]
-    : ADD NEW? AGENT h=(CHARS | CHARS_AND_DIGITS) USERNAME u=(CHARS | CHARS_AND_DIGITS) PASSWORD p=(CHARS | CHARS_AND_DIGITS)
+    : ADD NEW? AGENT h=(CHARS | CHARS_AND_DIGITS | IPADDRESS) (USERNAME u=(CHARS | CHARS_AND_DIGITS))? (PASSWORD p=(CHARS | CHARS_AND_DIGITS))?
         {
             $values = new HashMap<String,String>();
             $values.put("operator", "addNewAgent");
@@ -36,6 +37,14 @@ addNewAgent returns [Map<String,String> values]
             $values.put("password", $p.text);
         };
 
+provideUsernameAndPassword returns [Map<String,String> values] :
+    USERNAME u=(CHARS | CHARS_AND_DIGITS) PASSWORD p=(CHARS | CHARS_AND_DIGITS)
+    {
+             $values = new HashMap<String,String>();
+             $values.put("operator", "provideUsernameAndPassword");
+             $values.put("username", $u.text);
+             $values.put("password", $p.text);
+    };
 
 
 /*
