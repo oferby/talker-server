@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Optional;
+import java.util.SortedSet;
 
 @Controller
 public class AgentHostManager {
@@ -44,14 +46,15 @@ public class AgentHostManager {
 
     public void addAgent(String target, String username, String password) {
 
-        Optional<HostAgent> hostAgentByName = nodeEntityRepository.findHostAgentByName("");
+        List<HostAgent> allHostAgents = nodeEntityRepository.findAllHostAgents();
 
-        if (hostAgentByName.isEmpty())
+        if (allHostAgents.isEmpty())
             throw new EntityNotFoundException();
 
-        HostAgent hostAgent = hostAgentByName.get();
+        HostAgent hostAgent = allHostAgents.get(0);
         hostAgent.addDeviceAgent(new DeviceAgent(target, username, password));
         nodeEntityRepository.save(hostAgent);
+
     }
 
     public void addAgent(String host, String target, String username, String password) {

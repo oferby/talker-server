@@ -1,19 +1,16 @@
 package com.toga.netbrain;
 
+import com.toga.netbrain.agent.AgentHostManager;
 import com.toga.netbrain.model.db.controller.NodeEntityRepository;
 import com.toga.netbrain.model.db.entities.DataSizeUnits;
 import com.toga.netbrain.model.db.entities.Element;
 import com.toga.netbrain.model.db.entities.hw.*;
 import com.toga.netbrain.model.db.entities.hw.inf.EthernetPort;
-import com.toga.netbrain.model.db.entities.management.AgentPerHost;
 import com.toga.netbrain.model.db.entities.management.DeviceAgent;
 import com.toga.netbrain.model.db.entities.management.HostAgent;
 import com.toga.netbrain.model.db.entities.org.Vendor;
-import org.antlr.v4.runtime.tree.Tree;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.neo4j.cypherdsl.core.Cypher;
-import org.neo4j.driver.internal.shaded.reactor.core.publisher.Flux;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,6 +23,9 @@ public class TestNeo4j {
 
     @Autowired
     private NodeEntityRepository nodeEntityRepository;
+
+    @Autowired
+    private AgentHostManager agentHostManager;
 
     @Test
     public void testFindAll() {
@@ -70,7 +70,7 @@ public class TestNeo4j {
 
         hostById = nodeEntityRepository.findById(id);
 
-        assert !hostById.isPresent();
+        assert hostById.isEmpty();
 
     }
 
@@ -175,11 +175,24 @@ public class TestNeo4j {
     @Test
     public void testNumberOfAgents() {
 
-        SortedSet<AgentPerHost> numberOfAgentsPerHost = nodeEntityRepository.findNumberOfAgentsPerHost();
+        List<HostAgent> allHostAgents = nodeEntityRepository.findAllHostAgents();
 
-        assert numberOfAgentsPerHost != null;
+        assert allHostAgents != null;
 
-        System.out.println(numberOfAgentsPerHost);
+        System.out.println(allHostAgents);
+    }
+
+    @Test
+    public void testAddAgentToHost() {
+
+//        List<HostAgent> allHostAgents = nodeEntityRepository.findAllHostAgents();
+
+        agentHostManager.addAgent("target99", "u1", "p1");
+
+        HostAgent hostAgent = nodeEntityRepository.findHostAgentByTarget("target99");
+
+        assert hostAgent.getDeviceAgentList().size() > 1;
+
     }
 
 

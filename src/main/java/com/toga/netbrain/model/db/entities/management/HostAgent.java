@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @Node({"HostAgent","Element"})
-public class HostAgent extends Element {
+public class HostAgent extends Element implements Comparable<HostAgent>{
 
     private String name;
 
@@ -43,6 +43,25 @@ public class HostAgent extends Element {
             deviceAgentList = new ArrayList<>();
 
         deviceAgentList.add(deviceAgent);
+
+    }
+
+    @Override
+    public int compareTo(HostAgent that) {
+
+        int thatSize;
+        if (that.deviceAgentList == null || that.deviceAgentList.isEmpty())
+            thatSize = 0;
+        else
+            thatSize = that.deviceAgentList.size();
+
+        int thisSize;
+        if (this.deviceAgentList == null || this.deviceAgentList.isEmpty())
+            thisSize = 0;
+        else
+            thisSize = this.deviceAgentList.size();
+
+        return Integer.compare(thisSize, thatSize);
 
     }
 }
