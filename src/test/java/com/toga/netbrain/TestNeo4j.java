@@ -1,19 +1,24 @@
 package com.toga.netbrain;
 
-import com.toga.netbrain.model.db.NodeEntityRepository;
+import com.toga.netbrain.model.db.controller.NodeEntityRepository;
 import com.toga.netbrain.model.db.entities.DataSizeUnits;
 import com.toga.netbrain.model.db.entities.Element;
 import com.toga.netbrain.model.db.entities.hw.*;
 import com.toga.netbrain.model.db.entities.hw.inf.EthernetPort;
+import com.toga.netbrain.model.db.entities.management.AgentPerHost;
+import com.toga.netbrain.model.db.entities.management.DeviceAgent;
+import com.toga.netbrain.model.db.entities.management.HostAgent;
 import com.toga.netbrain.model.db.entities.org.Vendor;
+import org.antlr.v4.runtime.tree.Tree;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.neo4j.cypherdsl.core.Cypher;
+import org.neo4j.driver.internal.shaded.reactor.core.publisher.Flux;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -99,12 +104,82 @@ public class TestNeo4j {
 
         assert optional.isPresent();
 
-//        nodeEntityRepository.deleteById(id);
-//
-//        optional = nodeEntityRepository.findById(id);
-//
-//        assert !optional.isPresent();
+        nodeEntityRepository.deleteById(id);
 
+        optional = nodeEntityRepository.findById(id);
+
+        assert optional.isEmpty();
+
+    }
+
+
+    @Test
+    public void addAgents() {
+
+        String name = "hostAgent2";
+        HostAgent hostAgent = new HostAgent();
+        hostAgent.setName(name);
+
+        HostAgent save = nodeEntityRepository.save(hostAgent);
+
+        Optional<HostAgent> agentByName = nodeEntityRepository.findHostAgentByName(name);
+
+        assert agentByName.isPresent();
+
+        HostAgent hostAgentByName = agentByName.get();
+
+        String target = "target";
+        String username = "username";
+        String password = "passwd";
+        for (int i = 0; i < 10; i++) {
+            DeviceAgent deviceAgent = new DeviceAgent(target + (20 + i), username, password);
+
+            hostAgentByName.addDeviceAgent(deviceAgent);
+
+        }
+
+        HostAgent agent = nodeEntityRepository.save(hostAgentByName);
+
+        assert agent.getDeviceAgentList() != null;
+
+    }
+
+
+    @Test
+    public void testAgents() {
+
+        String name = "hostAgent1";
+        String target = "target";
+
+        HostAgent hostAgentByTarget = nodeEntityRepository.findHostAgentByTarget(target + 1);
+
+        assert hostAgentByTarget != null;
+
+        nodeEntityRepository.deleteHostAgent(name);
+
+        Optional<HostAgent> agentByName = nodeEntityRepository.findHostAgentByName(name);
+
+        assert agentByName.isPresent();
+
+    }
+
+    @Test
+    public void deleteDeviceAgent() {
+        nodeEntityRepository.deleteDeviceAgentByTarget("target1");
+
+        DeviceAgent target1 = nodeEntityRepository.findDeviceAgentByTarget("target1");
+
+        assert target1 == null;
+    }
+
+    @Test
+    public void testNumberOfAgents() {
+
+        SortedSet<AgentPerHost> numberOfAgentsPerHost = nodeEntityRepository.findNumberOfAgentsPerHost();
+
+        assert numberOfAgentsPerHost != null;
+
+        System.out.println(numberOfAgentsPerHost);
     }
 
 

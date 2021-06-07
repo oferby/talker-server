@@ -3,6 +3,7 @@ package com.toga.netbrain.dialogue;
 import com.toga.netbrain.agent.AgentHostManager;
 import com.toga.netbrain.antlr4.NetbrainGrammarLexer;
 import com.toga.netbrain.antlr4.NetbrainGrammarParser;
+import com.toga.netbrain.model.db.entities.management.HostAgent;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -67,6 +68,8 @@ public class AntlrDialogueEngine implements DialogueEngine {
     private void addHostAgent(Map<String, String> values, Dialogue dialogue) {
 
         dialogue.getContext().put("context", "addHostAgent");
+
+        agentHostManager.addHostAgent(values.get("name"));
 
         dialogue.setText("new agent host added");
     }

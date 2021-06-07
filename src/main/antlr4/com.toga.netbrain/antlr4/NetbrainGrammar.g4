@@ -24,15 +24,17 @@ addNewHostAgent returns [Map<String,String> values]
         {
             $values = new HashMap<String,String>();
             $values.put("operator", "addNewHostAgent");
-            $values.put("host", $h.text);
+            $values.put("name", $h.text);
         };
 
 addNewAgent returns [Map<String,String> values]
-    : ADD NEW? AGENT h=(CHARS | CHARS_AND_DIGITS | IPADDRESS) (USERNAME u=(CHARS | CHARS_AND_DIGITS))? (PASSWORD p=(CHARS | CHARS_AND_DIGITS))?
+    : ADD NEW? AGENT t=(CHARS | CHARS_AND_DIGITS | IPADDRESS) (USERNAME u=(CHARS | CHARS_AND_DIGITS))?
+            (PASSWORD p=(CHARS | CHARS_AND_DIGITS))? (TO HOST? h=(CHARS | CHARS_AND_DIGITS))?
         {
             $values = new HashMap<String,String>();
             $values.put("operator", "addNewAgent");
-            $values.put("host", $h.text);
+            $values.put("name", $h.text);
+            $values.put("target", $t.text);
             $values.put("username", $u.text);
             $values.put("password", $p.text);
         };
