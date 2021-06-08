@@ -1,27 +1,36 @@
 package com.toga.netbrain.agent;
 
+import com.toga.netbrain.agent.grpc.GrpcClient;
 import com.toga.netbrain.model.db.controller.NodeEntityRepository;
 import com.toga.netbrain.model.db.entities.EntityExistException;
 import com.toga.netbrain.model.db.entities.EntityNotFoundException;
 import com.toga.netbrain.model.db.entities.management.DeviceAgent;
 import com.toga.netbrain.model.db.entities.management.HostAgent;
+import com.toga.netbrain.service.AgentHostInfoResponse;
+import com.toga.netbrain.service.DeleteAgentResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
-import java.util.SortedSet;
 
 @Controller
-public class AgentHostManager {
+public class HostAgentManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(AgentHostManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(HostAgentManager.class);
 
     @Autowired
     private NodeEntityRepository nodeEntityRepository;
+
+    @Autowired
+    private GrpcClient grpcClient;
+
+    @Autowired
+    private TaskExecutor taskExecutor;
 
     public void addHostAgent(String host) {
 
@@ -30,12 +39,24 @@ public class AgentHostManager {
 
         HostAgent hostAgent = new HostAgent();
         hostAgent.setName(host);
+        hostAgent = nodeEntityRepository.save(hostAgent);
+
+        AgentHostInfoResponse hostAgentInfo = grpcClient.requestHostAgentInfo(hostAgent);
+        hostAgent.setHostName(hostAgentInfo.getHostName());
+
         nodeEntityRepository.save(hostAgent);
+
 
     }
 
     public void deleteHostAgent(String host) {
-        nodeEntityRepository.deleteHostAgent(host);
+        Optional<HostAgent> hostAgent = nodeEntityRepository.findHostAgentByName(host);
+
+        if (hostAgent.isEmpty())
+            throw new EntityNotFoundException("could not find host to delete");
+
+        nodeEntityRepository.delete(hostAgent.get());
+        grpcClient.shutDownHostAgent(hostAgent.get());
     }
 
     public HostAgent getHostAgentByTarget(String target) {
@@ -63,17 +84,38 @@ public class AgentHostManager {
 
         if (hostAgentByName.isEmpty())
             throw new EntityNotFoundException();
+
         HostAgent hostAgent = hostAgentByName.get();
         hostAgent.addDeviceAgent(new DeviceAgent(target, username, password));
         nodeEntityRepository.save(hostAgent);
     }
 
     public void deleteDeviceAgent(String target) {
-        nodeEntityRepository.deleteDeviceAgentByTarget(target);
+
+        DeviceAgent agent = nodeEntityRepository.findDeviceAgentByTarget(target);
+        DeleteAgentResponse deleteAgentResponse = grpcClient.deleteAgent(agent.getId());
+        if (deleteAgentResponse.getAck()) {
+            nodeEntityRepository.deleteDeviceAgentByTarget(target);
+            return;
+        }
+
+        throw new RuntimeException("agent not deleted");
+
     }
 
     @PostConstruct
     private void getAllAgentsFromDB() {
+
+        List<HostAgent> hostAgents = nodeEntityRepository.findAllHostAgents();
+
+        for (HostAgent hostAgent: hostAgents) {
+            grpcClient.requestHostAgentInfo(hostAgent);
+        }
+
+    }
+
+    private void runAgentDiscovery(String host, String agent) {
+
 
 
     }

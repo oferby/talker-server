@@ -4,19 +4,29 @@ option java_multiple_files = true;
 
 package com.toga.netbrain.service;
 
+
 message AgentHostInfoRequest {
-  string hostId = 1;
+  int64 hostId = 1;
 }
 
 message AgentHostInfoResponse {
-  string hostId = 1;
+  int64 hostId = 1;
   string hostName = 2;
   int32 numOfAgents = 3;
 
 }
 
+message HostAgentRequest {
+  string command = 1;
+}
+
+message HostAgentResponse {
+  int32 errorCode = 1;
+  string text = 2;
+}
+
 message CreateAgentRequest {
-  string host = 1;
+  int64 agentId = 1;
   string username = 2;
   string password = 3;
 }
@@ -25,12 +35,20 @@ message CreateAgentResponse {
   bool ack = 1;
 }
 
+message DeleteAgentRequest {
+  int64 agentId = 1;
+}
+
+message DeleteAgentResponse {
+  bool ack = 1;
+}
+
 message NodeDiscoveryRequest {
-  string host = 1;
+  int64 agentId = 1;
 }
 
 message NodeDiscoveryResponse {
-  string host = 1;
+  int64 agentId = 1;
   repeated NetElement netElements = 2;
 }
 
@@ -41,6 +59,8 @@ message NetElement {
 
 service AgentService {
   rpc getHostInfo (AgentHostInfoRequest) returns (AgentHostInfoResponse);
+  rpc sendCommand (HostAgentRequest) returns (HostAgentResponse);
   rpc createAgent (CreateAgentRequest) returns (CreateAgentResponse);
   rpc runDiscovery (NodeDiscoveryRequest) returns (NodeDiscoveryResponse);
+  rpc deleteAgent (DeleteAgentRequest) returns (DeleteAgentResponse);
 }

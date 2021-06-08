@@ -1,5 +1,6 @@
 package com.toga.netbrain.agent.grpc;
 
+import com.toga.netbrain.model.db.entities.management.HostAgent;
 import com.toga.netbrain.service.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -16,18 +17,18 @@ public class GrpcClient {
 
     private final Logger logger = LoggerFactory.getLogger(GrpcClient.class);
 
-    private Map<String, AgentServiceGrpc.AgentServiceBlockingStub> stubMap = new HashMap<>();
-    private Map<String, String> agentTargetMap = new HashMap<>();
+    private Map<Long, HostAgent> hostAgentMap = new HashMap<>();
+    private Map<Long, AgentServiceGrpc.AgentServiceBlockingStub> stubMap = new HashMap<>();
+    private Map<Long, Long> targetToHostMap = new HashMap<>();
 
 //    private AgentServiceGrpc.AgentServiceStub agentServiceStub;
 
-    public AgentHostInfoResponse requestAgentHostInfo(String agent) {
+    public AgentHostInfoResponse requestHostAgentInfo(HostAgent hostAgent) {
 
-        AgentServiceGrpc.AgentServiceBlockingStub blockingStub = this.getBlockingStub(agent);
+        addHostAgentToMap(hostAgent);
 
-        AgentHostInfoRequest request = AgentHostInfoRequest.newBuilder().setHostId(agent).build();
-
-        AgentHostInfoResponse hostInfo = blockingStub.getHostInfo(request);
+        AgentHostInfoRequest request = AgentHostInfoRequest.newBuilder().setHostId(hostAgent.getId()).build();
+        AgentHostInfoResponse hostInfo = stubMap.get(hostAgent.getId()).getHostInfo(request);
 
         logger.debug("hostInfo: " + hostInfo);
 
@@ -35,61 +36,71 @@ public class GrpcClient {
 
     }
 
-    public CreateAgentResponse createAgent(String agent, String target, String username, String password) {
+    public void shutDownHostAgent(HostAgent hostAgent) {
 
-        agentTargetMap.put(target, agent);
+        HostAgentResponse response = this.stubMap.get(hostAgent.getId())
+                .sendCommand(HostAgentRequest.newBuilder().setCommand("shutDownHostAgent").build());
 
-        AgentServiceGrpc.AgentServiceBlockingStub blockingStub = this.getBlockingStub(agent);
+        if (response.getErrorCode() != 0)
+            throw new RuntimeException("problem shutting down host: " + hostAgentMap.get(hostAgent.getName()));
+
+    }
+
+    public CreateAgentResponse createAgent(Long hostAgentId, Long targetId, String username, String password) {
+
+        targetToHostMap.put(targetId, hostAgentId);
 
         CreateAgentRequest createAgentRequest = CreateAgentRequest.newBuilder()
-                .setHost(target)
+                .setAgentId(targetId)
                 .setUsername(username)
                 .setPassword(password)
                 .build();
 
-        CreateAgentResponse response = blockingStub.createAgent(createAgentRequest);
+        CreateAgentResponse response = stubMap.get(hostAgentId).createAgent(createAgentRequest);
 
         logger.debug(response.toString());
 
         return response;
     }
 
-    public NodeDiscoveryResponse nodeDiscovery(String target) {
+    public NodeDiscoveryResponse nodeDiscovery(Long targetId) {
+        logger.debug("running discovery for agent id: " + targetId);
 
-        String agent = agentTargetMap.get(target);
-        AgentServiceGrpc.AgentServiceBlockingStub blockingStub = this.getBlockingStub(agent);
+        Long hostId = targetToHostMap.get(targetId);
 
         NodeDiscoveryRequest nodeDiscoveryRequest = NodeDiscoveryRequest.newBuilder()
-                .setHost(target).build();
+                .setAgentId(targetId).build();
 
-        NodeDiscoveryResponse response = blockingStub.runDiscovery(nodeDiscoveryRequest);
+        NodeDiscoveryResponse response = stubMap.get(hostId).runDiscovery(nodeDiscoveryRequest);
 
         logger.debug(response.toString());
 
         return response;
     }
 
+    public DeleteAgentResponse deleteAgent(Long deviceAgentId) {
+        logger.debug("got delete agent request to device ID: " + deviceAgentId);
 
-    private AgentServiceGrpc.AgentServiceBlockingStub getBlockingStub(String agent) {
+        Long hostAgentId = targetToHostMap.get(deviceAgentId);
+
+        DeleteAgentRequest request = DeleteAgentRequest.newBuilder().setAgentId(deviceAgentId).build();
+
+        return stubMap.get(hostAgentId).deleteAgent(request);
+
+    }
+
+    private void addHostAgentToMap(HostAgent hostAgent) {
+
+        hostAgentMap.put(hostAgent.getId(), hostAgent);
 
         AgentServiceGrpc.AgentServiceBlockingStub blockingStub;
+        ManagedChannelBuilder<?> channelBuilder =
+                ManagedChannelBuilder.forAddress(hostAgent.getName(), 51051).usePlaintext();
+        ManagedChannel channel = channelBuilder.build();
 
-        if (stubMap.containsKey(agent)) {
-            blockingStub = stubMap.get(agent);
+        blockingStub = AgentServiceGrpc.newBlockingStub(channel);
 
-        } else {
-
-            ManagedChannelBuilder<?> channelBuilder =
-                    ManagedChannelBuilder.forAddress(agent, 51051).usePlaintext();
-            ManagedChannel channel = channelBuilder.build();
-
-            blockingStub = AgentServiceGrpc.newBlockingStub(channel);
-
-            stubMap.put(agent, blockingStub);
-
-        }
-
-        return blockingStub;
+        stubMap.put(hostAgent.getId(), blockingStub);
 
     }
 

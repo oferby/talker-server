@@ -34,6 +34,11 @@ public class Dialogue {
         return context;
     }
 
+    public Map<String, String> getNewContext() {
+        this.context = new HashMap<>();
+        return this.context;
+    }
+
     public void setContext(Map<String, String> context) {
         this.context = context;
     }

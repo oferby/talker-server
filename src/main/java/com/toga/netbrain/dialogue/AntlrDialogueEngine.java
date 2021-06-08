@@ -1,9 +1,9 @@
 package com.toga.netbrain.dialogue;
 
-import com.toga.netbrain.agent.AgentHostManager;
+import com.toga.netbrain.agent.HostAgentManager;
 import com.toga.netbrain.antlr4.NetbrainGrammarLexer;
 import com.toga.netbrain.antlr4.NetbrainGrammarParser;
-import com.toga.netbrain.model.db.entities.management.HostAgent;
+import com.toga.netbrain.model.db.entities.EntityExistException;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -20,7 +20,7 @@ public class AntlrDialogueEngine implements DialogueEngine {
     private static final Logger logger = LoggerFactory.getLogger(AntlrDialogueEngine.class);
 
     @Autowired
-    private AgentHostManager agentHostManager;
+    private HostAgentManager hostAgentManager;
 
     @Override
     public Dialogue received(Dialogue dialogue) {
@@ -59,36 +59,73 @@ public class AntlrDialogueEngine implements DialogueEngine {
             case "provideUsernameAndPassword" -> {
                 provideUsernameAndPassword(values, dialogue);
             }
+
+            case "shutDownHostAgent" -> {
+                shutDownHostAgent(values, dialogue);
+            }
+
+            case "provideParameter" -> {
+
+            }
         }
 
 
         return dialogue;
     }
 
+    private void shutDownHostAgent(Map<String, String> values, Dialogue dialogue) {
+
+        dialogue.getNewContext().put("context", "shutDownHostAgent");
+        if (!values.containsKey("host")) {
+            dialogue.setText("Please provide host name/IP");
+            return;
+        }
+
+        String hostAgent = values.get("host");
+        hostAgentManager.deleteHostAgent(hostAgent);
+
+    }
+
+
     private void addHostAgent(Map<String, String> values, Dialogue dialogue) {
 
-        dialogue.getContext().put("context", "addHostAgent");
+        dialogue.getNewContext().put("context", "addHostAgent");
 
-        agentHostManager.addHostAgent(values.get("name"));
+        try {
+            hostAgentManager.addHostAgent(values.get("host"));
+        } catch (EntityExistException e) {
+            dialogue.setText("Host already exist.");
+            return;
+        }
 
         dialogue.setText("new agent host added");
     }
 
     private void addNewAgent(Map<String, String> values, Dialogue dialogue) {
 
-        dialogue.getContext().put("context", "addNewAgent");
+        dialogue.getNewContext().put("context", "addNewAgent");
 
         if (values.get("username") != null && values.get("password") != null) {
+
+            if (values.get("host") == null) {
+                hostAgentManager.addAgent(values.get("target"),
+                        values.get("username"), values.get("password"));
+            } else {
+                hostAgentManager.addAgent(values.get("host"), values.get("target"),
+                        values.get("username"), values.get("password"));
+            }
 
             dialogue.setText("new agent added");
 
         } else {
 
+            if (values.get("host") != null)
+                dialogue.getContext().put("host", values.get("host"));
             dialogue.setText("please provide username and password");
 
         }
 
-
+        logger.debug("new agent created");
     }
 
 
@@ -96,11 +133,22 @@ public class AntlrDialogueEngine implements DialogueEngine {
 
         if (dialogue.getContext().containsKey("context") && dialogue.getContext().get("context").equals("addNewAgent")) {
 
+            if (dialogue.getContext().get("host") == null) {
+                hostAgentManager.addAgent(values.get("target"),
+                        values.get("username"), values.get("password"));
+
+            } else {
+                hostAgentManager.addAgent(values.get("host"), values.get("target"),
+                        values.get("username"), values.get("password"));
+            }
 
             dialogue.setText("new agent added");
 
         }
 
     }
+
+
+
 
 }

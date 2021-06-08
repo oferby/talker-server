@@ -13,6 +13,8 @@ public class HostAgent extends Element implements Comparable<HostAgent>{
 
     private String name;
 
+    private String hostName;
+
     @Relationship(value = "MANAGE", direction = Relationship.Direction.OUTGOING)
     private List<DeviceAgent> deviceAgentList;
 
@@ -44,6 +46,14 @@ public class HostAgent extends Element implements Comparable<HostAgent>{
 
         deviceAgentList.add(deviceAgent);
 
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
     }
 
     @Override

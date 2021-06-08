@@ -17,6 +17,8 @@ bn  returns [Map<String,String> values] :
         ( addNewHostAgent { $values = $addNewHostAgent.values; }
         | addNewAgent { $values = $addNewAgent.values; }
         | provideUsernameAndPassword { $values = $provideUsernameAndPassword.values; }
+        | shutDownHostAgent { $values = $shutDownHostAgent.values; }
+        | provideParameter { $values = $provideParameter.values; }
         );
 
 addNewHostAgent returns [Map<String,String> values]
@@ -24,16 +26,23 @@ addNewHostAgent returns [Map<String,String> values]
         {
             $values = new HashMap<String,String>();
             $values.put("operator", "addNewHostAgent");
-            $values.put("name", $h.text);
+            $values.put("host", $h.text);
         };
 
+shutDownHostAgent returns [Map<String,String> values]
+    : (CLEAR | SHUTDOWN | DELETE | REMOVE | STOP ) HOST h=(CHARS | CHARS_AND_DIGITS | IPADDRESS)
+    {
+            $values = new HashMap<String,String>();
+            $values.put("operator", "shutDownHostAgent");
+            $values.put("host", $h.text);
+    };
+
 addNewAgent returns [Map<String,String> values]
-    : ADD NEW? AGENT t=(CHARS | CHARS_AND_DIGITS | IPADDRESS) (USERNAME u=(CHARS | CHARS_AND_DIGITS))?
-            (PASSWORD p=(CHARS | CHARS_AND_DIGITS))? (TO HOST? h=(CHARS | CHARS_AND_DIGITS))?
+    : ADD NEW? AGENT ( t=(CHARS | CHARS_AND_DIGITS | IPADDRESS))? (USERNAME u=(CHARS | CHARS_AND_DIGITS))? (PASSWORD p=(CHARS | CHARS_AND_DIGITS))? ( (TO | ON ) HOST? h=(CHARS | CHARS_AND_DIGITS))?
         {
             $values = new HashMap<String,String>();
             $values.put("operator", "addNewAgent");
-            $values.put("name", $h.text);
+            $values.put("host", $h.text);
             $values.put("target", $t.text);
             $values.put("username", $u.text);
             $values.put("password", $p.text);
@@ -48,6 +57,13 @@ provideUsernameAndPassword returns [Map<String,String> values] :
              $values.put("password", $p.text);
     };
 
+provideParameter returns [Map<String,String> values] :
+    p=(CHARS | CHARS_AND_DIGITS)
+    {
+             $values = new HashMap<String,String>();
+             $values.put("operator", "provideParameter");
+             $values.put("param", $p.text);
+    };
 
 /*
 * Lexer Rules
@@ -105,11 +121,15 @@ POLICY      : ( 'policy' | 'policies' ) ;
 PROTOCOL    : ('mpls' | 'ethernet' ) ;
 PASSWORD    : 'password';
 
+REMOVE      : 'remove';
+
 SHORTEST       : ( 'shortest' | 'short' );
-SHOW        : ( 'show' |  'get' ) ;
+SHOW        : ( 'show' |  'get' | 'display' ) ;
 SEARCH      : ( 'find' | 'search' ) ;
 SEARCHABLE  : ( 'path' | 'traffic' ) ;
 SETUP       : 'setup';
+SHUTDOWN    : 'shutdown';
+STOP        : 'stop';
 
 TRAFFIC     : 'traffic';
 TO          : 'to' ;

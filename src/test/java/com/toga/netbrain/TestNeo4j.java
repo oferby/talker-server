@@ -1,6 +1,6 @@
 package com.toga.netbrain;
 
-import com.toga.netbrain.agent.AgentHostManager;
+import com.toga.netbrain.agent.HostAgentManager;
 import com.toga.netbrain.model.db.controller.NodeEntityRepository;
 import com.toga.netbrain.model.db.entities.DataSizeUnits;
 import com.toga.netbrain.model.db.entities.Element;
@@ -25,7 +25,7 @@ public class TestNeo4j {
     private NodeEntityRepository nodeEntityRepository;
 
     @Autowired
-    private AgentHostManager agentHostManager;
+    private HostAgentManager hostAgentManager;
 
     @Test
     public void testFindAll() {
@@ -187,7 +187,7 @@ public class TestNeo4j {
 
 //        List<HostAgent> allHostAgents = nodeEntityRepository.findAllHostAgents();
 
-        agentHostManager.addAgent("target99", "u1", "p1");
+        hostAgentManager.addAgent("target99", "u1", "p1");
 
         HostAgent hostAgent = nodeEntityRepository.findHostAgentByTarget("target99");
 
