@@ -8,6 +8,8 @@ import java.util.Map;
 public class Dialogue {
 
     private String text;
+    private String imageURL;
+    private List<DialogueOption>dialogueOptionList;
     private List<String> history = new ArrayList<>();
     private Map<String, String> context = new HashMap<>();
 
@@ -21,6 +23,28 @@ public class Dialogue {
         this.text = text;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public List<DialogueOption> getDialogueOptionList() {
+        return dialogueOptionList;
+    }
+
+    public void setDialogueOptionList(List<DialogueOption> dialogueOptionList) {
+        this.dialogueOptionList = dialogueOptionList;
+    }
+
+    public void addDialogueOption(String text, String responseURI) {
+        if (dialogueOptionList == null)
+            dialogueOptionList = new ArrayList<>();
+        dialogueOptionList.add(new DialogueOption(text, responseURI));
+
+    }
 
     public List<String> getHistory() {
         return history;

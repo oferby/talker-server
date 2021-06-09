@@ -64,13 +64,37 @@ public class AntlrDialogueEngine implements DialogueEngine {
                 shutDownHostAgent(values, dialogue);
             }
 
-            case "provideParameter" -> {
-
+            case "deleteAgent" -> {
+                deleteAgent(values, dialogue);
             }
+
+            case "" -> {
+                runAgentDiscovery(values, dialogue);
+            }
+
         }
 
 
         return dialogue;
+    }
+
+    private void runAgentDiscovery(Map<String, String> values, Dialogue dialogue) {
+
+
+    }
+
+
+    private void deleteAgent(Map<String, String> values, Dialogue dialogue) {
+
+        String target = values.get("target");
+        if (target == null) {
+            dialogue.setText("please enter target");
+            return;
+        }
+
+        hostAgentManager.deleteDeviceAgent(target);
+
+        dialogue.setText("agent deleted.");
     }
 
     private void shutDownHostAgent(Map<String, String> values, Dialogue dialogue) {
@@ -83,6 +107,8 @@ public class AntlrDialogueEngine implements DialogueEngine {
 
         String hostAgent = values.get("host");
         hostAgentManager.deleteHostAgent(hostAgent);
+
+        dialogue.setText("host " + hostAgent + " removed");
 
     }
 
@@ -98,7 +124,7 @@ public class AntlrDialogueEngine implements DialogueEngine {
             return;
         }
 
-        dialogue.setText("new agent host added");
+        dialogue.setText("new host agent added");
     }
 
     private void addNewAgent(Map<String, String> values, Dialogue dialogue) {
@@ -147,8 +173,6 @@ public class AntlrDialogueEngine implements DialogueEngine {
         }
 
     }
-
-
 
 
 }

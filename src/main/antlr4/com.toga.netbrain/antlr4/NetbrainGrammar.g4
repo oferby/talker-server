@@ -17,6 +17,7 @@ bn  returns [Map<String,String> values] :
         ( addNewHostAgent { $values = $addNewHostAgent.values; }
         | addNewAgent { $values = $addNewAgent.values; }
         | provideUsernameAndPassword { $values = $provideUsernameAndPassword.values; }
+        | deleteAgent  { $values = $deleteAgent.values; }
         | shutDownHostAgent { $values = $shutDownHostAgent.values; }
         | provideParameter { $values = $provideParameter.values; }
         );
@@ -55,6 +56,14 @@ provideUsernameAndPassword returns [Map<String,String> values] :
              $values.put("operator", "provideUsernameAndPassword");
              $values.put("username", $u.text);
              $values.put("password", $p.text);
+    };
+
+deleteAgent returns  [Map<String,String> values] :
+    ( DELETE | REMOVE | STOP ) AGENT t=(CHARS | CHARS_AND_DIGITS | IPADDRESS)
+    {
+             $values = new HashMap<String,String>();
+             $values.put("operator", "deleteAgent");
+             $values.put("target", $t.text);
     };
 
 provideParameter returns [Map<String,String> values] :

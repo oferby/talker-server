@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface NodeEntityRepository extends Neo4jRepository<Element, Long> {
 
-    @Query("match (h:HostAgent)-[r]->(da:DeviceAgent) return h, collect(r), collect(da)")
+    @Query("match (h:HostAgent) optional match (h)-[r]->(da:DeviceAgent) return h, collect(r), collect(da)")
     List<HostAgent> findAllHostAgents();
 
     Optional<HostAgent> findHostAgentByName(String name);

@@ -7,19 +7,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 public class NetworkInterface extends Element {
 
     @Property
-    private String name;
-
-    @Property
     private OperationalStatus operationalStatus;
-
-    public String getName() {
-        return name;
-    }
-
-    public NetworkInterface setName(String name) {
-        this.name = name;
-        return this;
-    }
 
     public OperationalStatus getOperationalStatus() {
         return operationalStatus;

@@ -55,15 +55,10 @@ public class HostAgentManager {
         if (hostAgent.isEmpty())
             throw new EntityNotFoundException("could not find host to delete");
 
-        nodeEntityRepository.delete(hostAgent.get());
         grpcClient.shutDownHostAgent(hostAgent.get());
+        nodeEntityRepository.delete(hostAgent.get());
     }
 
-    public HostAgent getHostAgentByTarget(String target) {
-
-        return nodeEntityRepository.findHostAgentByTarget(target);
-
-    }
 
     public void addAgent(String target, String username, String password) {
 
@@ -73,8 +68,7 @@ public class HostAgentManager {
             throw new EntityNotFoundException();
 
         HostAgent hostAgent = allHostAgents.get(0);
-        hostAgent.addDeviceAgent(new DeviceAgent(target, username, password));
-        nodeEntityRepository.save(hostAgent);
+        addAgent(hostAgent, target, username, password);
 
     }
 
@@ -86,14 +80,22 @@ public class HostAgentManager {
             throw new EntityNotFoundException();
 
         HostAgent hostAgent = hostAgentByName.get();
+        addAgent(hostAgent, target, username, password);
+    }
+
+    private void addAgent(HostAgent hostAgent, String target, String username, String password) {
+
         hostAgent.addDeviceAgent(new DeviceAgent(target, username, password));
         nodeEntityRepository.save(hostAgent);
+
+        grpcClient.createAgent(hostAgent.getId(), target, username, password);
+
     }
+
 
     public void deleteDeviceAgent(String target) {
 
-        DeviceAgent agent = nodeEntityRepository.findDeviceAgentByTarget(target);
-        DeleteAgentResponse deleteAgentResponse = grpcClient.deleteAgent(agent.getId());
+        DeleteAgentResponse deleteAgentResponse = grpcClient.deleteAgent(target);
         if (deleteAgentResponse.getAck()) {
             nodeEntityRepository.deleteDeviceAgentByTarget(target);
             return;
@@ -103,22 +105,21 @@ public class HostAgentManager {
 
     }
 
-    @PostConstruct
-    private void getAllAgentsFromDB() {
-
-        List<HostAgent> hostAgents = nodeEntityRepository.findAllHostAgents();
-
-        for (HostAgent hostAgent: hostAgents) {
-            grpcClient.requestHostAgentInfo(hostAgent);
-        }
-
-    }
-
     private void runAgentDiscovery(String host, String agent) {
 
 
 
     }
+
+
+    @PostConstruct
+    private void getAllAgentsFromDB() {
+
+        List<HostAgent> hostAgents = nodeEntityRepository.findAllHostAgents();
+        grpcClient.loadAgents(hostAgents);
+
+    }
+
 
 
 }

@@ -6,11 +6,16 @@ import org.springframework.data.neo4j.core.schema.Property;
 @Node({"Process","Element"})
 public class Process extends Software {
 
-    @Property
     private Long processId;
 
-    @Property
-    private String name;
+    public Process() {
+    }
+
+    public Process(Long processId, String name) {
+        this.processId = processId;
+        this.setName(name);
+
+    }
 
     public Long getProcessId() {
         return processId;
@@ -21,12 +26,5 @@ public class Process extends Software {
         return this;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public Process setName(String name) {
-        this.name = name;
-        return this;
-    }
 }

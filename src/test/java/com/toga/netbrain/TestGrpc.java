@@ -72,15 +72,15 @@ public class TestGrpc {
 
 //        String host = "localhost";
 //
-//        NodeDiscoveryResponse response = grpcClient.nodeDiscovery(host);
-//
-//        assert response.getAgent().equals(host);
-//
-//        System.out.println("Node Information:");
-//
-//        for (NetElement netElement : response.getNetElementsList()) {
-//            System.out.println("URI: " + netElement.getURI());
-//        }
+        NodeDiscoveryResponse response = grpcClient.nodeDiscovery(target);
+
+        assert response.getAgentId().equals(target);
+
+        System.out.println("Node Information:");
+
+        for (NetElement netElement : response.getNetElementsList()) {
+            System.out.println("URI: " + netElement.getURI());
+        }
 
 
     }

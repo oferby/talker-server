@@ -10,9 +10,6 @@ import java.util.List;
 public class Host extends NetworkElement {
 
     @Relationship("HAS")
-    private String name;
-
-    @Relationship("HAS")
     private CPU cpu;
 
     @Relationship("HAS")
@@ -38,15 +35,6 @@ public class Host extends NetworkElement {
 
     public void setMemory(Memory memory) {
         this.memory = memory;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Host setName(String name) {
-        this.name = name;
-        return this;
     }
 
     public OperatingSystem getOperatingSystem() {

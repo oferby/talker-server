@@ -53,7 +53,8 @@ public class TestNeo4j {
 
         Host host = new Host();
         CPU cpu = new CPU();
-        cpu.setVendor(new Vendor().setName("Intel"));
+        Vendor vendor = new Vendor("Intel");
+        cpu.setVendor(vendor);
         host.setCpu(cpu);
         host.setMemory(new Memory().setAmount(1).setDataSizeUnits(DataSizeUnits.GB));
 
@@ -77,18 +78,17 @@ public class TestNeo4j {
     @Test
     public void testBuildChassis() {
 
-        Chassis chassis = new Chassis().setVendor(new Vendor().setName("Cisco"));
+        Chassis chassis = new Chassis().setVendor(new Vendor("Cisco"));
 
         for (int i = 0; i < 5; i++) {
 
             LineCard lineCard = new LineCard();
 
             for (int j = 0; j < 4; j++) {
-
-                lineCard.addNetworkInterface(new EthernetPort()
-                        .setOperationalStatus(OperationalStatus.UP)
-                        .setName("eth" + j)
-                );
+                EthernetPort ethernetPort = new EthernetPort();
+                ethernetPort.setOperationalStatus(OperationalStatus.UP);
+                ethernetPort.setName("eth" + j);
+                lineCard.addNetworkInterface(ethernetPort);
 
             }
 
@@ -131,7 +131,8 @@ public class TestNeo4j {
         String target = "target";
         String username = "username";
         String password = "passwd";
-        for (int i = 0; i < 10; i++) {
+        int numOfAgents = 10;
+        for (int i = 0; i < numOfAgents; i++) {
             DeviceAgent deviceAgent = new DeviceAgent(target + (20 + i), username, password);
 
             hostAgentByName.addDeviceAgent(deviceAgent);
@@ -141,6 +142,12 @@ public class TestNeo4j {
         HostAgent agent = nodeEntityRepository.save(hostAgentByName);
 
         assert agent.getDeviceAgentList() != null;
+
+        Optional<HostAgent> agentOptional = nodeEntityRepository.findHostAgentByName(name);
+
+        assert agentOptional.isPresent();
+        hostAgent = agentOptional.get();
+        assert hostAgent.getDeviceAgentList().size() == 10;
 
     }
 

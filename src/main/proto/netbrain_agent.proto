@@ -6,27 +6,27 @@ package com.toga.netbrain.service;
 
 
 message AgentHostInfoRequest {
-  int64 hostId = 1;
+  string hostId = 1;
 }
 
 message AgentHostInfoResponse {
-  int64 hostId = 1;
+  string hostId = 1;
   string hostName = 2;
   int32 numOfAgents = 3;
 
 }
 
-message HostAgentRequest {
+message HostAgentCommandRequest {
   string command = 1;
 }
 
-message HostAgentResponse {
+message HostAgentCommandResponse {
   int32 errorCode = 1;
   string text = 2;
 }
 
 message CreateAgentRequest {
-  int64 agentId = 1;
+  string agentId = 1;
   string username = 2;
   string password = 3;
 }
@@ -36,7 +36,7 @@ message CreateAgentResponse {
 }
 
 message DeleteAgentRequest {
-  int64 agentId = 1;
+  string agentId = 1;
 }
 
 message DeleteAgentResponse {
@@ -44,11 +44,11 @@ message DeleteAgentResponse {
 }
 
 message NodeDiscoveryRequest {
-  int64 agentId = 1;
+  string agentId = 1;
 }
 
 message NodeDiscoveryResponse {
-  int64 agentId = 1;
+  string agentId = 1;
   repeated NetElement netElements = 2;
 }
 
@@ -59,7 +59,7 @@ message NetElement {
 
 service AgentService {
   rpc getHostInfo (AgentHostInfoRequest) returns (AgentHostInfoResponse);
-  rpc sendCommand (HostAgentRequest) returns (HostAgentResponse);
+  rpc sendCommand (HostAgentCommandRequest) returns (HostAgentCommandResponse);
   rpc createAgent (CreateAgentRequest) returns (CreateAgentResponse);
   rpc runDiscovery (NodeDiscoveryRequest) returns (NodeDiscoveryResponse);
   rpc deleteAgent (DeleteAgentRequest) returns (DeleteAgentResponse);

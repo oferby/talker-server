@@ -11,8 +11,6 @@ import java.util.List;
 @Node({"HostAgent","Element"})
 public class HostAgent extends Element implements Comparable<HostAgent>{
 
-    private String name;
-
     private String hostName;
 
     @Relationship(value = "MANAGE", direction = Relationship.Direction.OUTGOING)
@@ -21,16 +19,9 @@ public class HostAgent extends Element implements Comparable<HostAgent>{
     public HostAgent() {}
 
     public HostAgent(String name) {
-        this.name = name;
+        super(name);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<DeviceAgent> getDeviceAgentList() {
         return deviceAgentList;
