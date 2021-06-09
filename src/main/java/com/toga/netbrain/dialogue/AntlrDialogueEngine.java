@@ -68,19 +68,10 @@ public class AntlrDialogueEngine implements DialogueEngine {
                 deleteAgent(values, dialogue);
             }
 
-            case "" -> {
-                runAgentDiscovery(values, dialogue);
-            }
-
         }
 
 
         return dialogue;
-    }
-
-    private void runAgentDiscovery(Map<String, String> values, Dialogue dialogue) {
-
-
     }
 
 

@@ -72,7 +72,7 @@ public class TestGrpc {
 
 //        String host = "localhost";
 //
-        NodeDiscoveryResponse response = grpcClient.nodeDiscovery(target);
+        NodeDiscoveryResponse response = grpcClient.getAgentInformation(target);
 
         assert response.getAgentId().equals(target);
 

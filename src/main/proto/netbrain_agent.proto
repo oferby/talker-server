@@ -61,6 +61,6 @@ service AgentService {
   rpc getHostInfo (AgentHostInfoRequest) returns (AgentHostInfoResponse);
   rpc sendCommand (HostAgentCommandRequest) returns (HostAgentCommandResponse);
   rpc createAgent (CreateAgentRequest) returns (CreateAgentResponse);
-  rpc runDiscovery (NodeDiscoveryRequest) returns (NodeDiscoveryResponse);
+  rpc getAgentInformation (NodeDiscoveryRequest) returns (NodeDiscoveryResponse);
   rpc deleteAgent (DeleteAgentRequest) returns (DeleteAgentResponse);
 }

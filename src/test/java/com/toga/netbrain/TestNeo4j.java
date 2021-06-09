@@ -2,13 +2,11 @@ package com.toga.netbrain;
 
 import com.toga.netbrain.agent.HostAgentManager;
 import com.toga.netbrain.model.db.controller.NodeEntityRepository;
-import com.toga.netbrain.model.db.entities.DataSizeUnits;
-import com.toga.netbrain.model.db.entities.Element;
+import com.toga.netbrain.model.db.entities.*;
 import com.toga.netbrain.model.db.entities.hw.*;
-import com.toga.netbrain.model.db.entities.hw.inf.EthernetPort;
-import com.toga.netbrain.model.db.entities.management.DeviceAgent;
-import com.toga.netbrain.model.db.entities.management.HostAgent;
-import com.toga.netbrain.model.db.entities.org.Vendor;
+import com.toga.netbrain.model.db.entities.hw.inf.*;
+import com.toga.netbrain.model.db.entities.management.*;
+import com.toga.netbrain.model.db.entities.org.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

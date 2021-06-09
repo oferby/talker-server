@@ -65,4 +65,14 @@ public class HostAgent extends Element implements Comparable<HostAgent>{
         return Integer.compare(thisSize, thatSize);
 
     }
+
+    @Override
+    public String toString() {
+        return "HostAgent{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", hostName='" + hostName + '\'' +
+                ", deviceAgentList=" + deviceAgentList +
+                '}';
+    }
 }

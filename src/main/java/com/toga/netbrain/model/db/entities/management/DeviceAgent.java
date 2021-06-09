@@ -16,6 +16,10 @@ public class DeviceAgent extends Element {
     public DeviceAgent() {
     }
 
+    public DeviceAgent(String target) {
+        this.target = target;
+    }
+
     public DeviceAgent(String target, String username, String password) {
         this.target = target;
         this.username = username;
@@ -44,5 +48,15 @@ public class DeviceAgent extends Element {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "DeviceAgent{" +
+                "name=" + name + '\'' +
+                "target='" + target + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

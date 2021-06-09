@@ -76,7 +76,7 @@ public class GrpcClient {
         return response;
     }
 
-    public NodeDiscoveryResponse nodeDiscovery(String targetId) {
+    public NodeDiscoveryResponse getAgentInformation(String targetId) {
         logger.debug("running discovery for agent id: " + targetId);
 
         Long hostId = targetToHostMap.get(targetId);
@@ -84,7 +84,7 @@ public class GrpcClient {
         NodeDiscoveryRequest nodeDiscoveryRequest = NodeDiscoveryRequest.newBuilder()
                 .setAgentId(targetId).build();
 
-        NodeDiscoveryResponse response = stubMap.get(hostId).runDiscovery(nodeDiscoveryRequest);
+        NodeDiscoveryResponse response = stubMap.get(hostId).getAgentInformation(nodeDiscoveryRequest);
 
         logger.debug(response.toString());
 
@@ -114,13 +114,6 @@ public class GrpcClient {
         blockingStub = AgentServiceGrpc.newBlockingStub(channel);
 
         stubMap.put(hostAgent.getId(), blockingStub);
-
-    }
-
-    @PostConstruct
-    private void setup() {
-
-//        agentServiceStub = AgentServiceGrpc.newStub(channel);
 
     }
 

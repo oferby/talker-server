@@ -5,10 +5,10 @@ import org.springframework.data.neo4j.core.schema.*;
 public abstract class Element {
 
     @Id @GeneratedValue
-    private Long id;
+    protected Long id;
 
     @Property
-    private String name;
+    protected String name;
 
     public Element() {
     }
@@ -36,5 +36,13 @@ public abstract class Element {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Element{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

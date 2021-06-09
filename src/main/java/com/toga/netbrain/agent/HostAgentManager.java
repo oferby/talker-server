@@ -6,8 +6,7 @@ import com.toga.netbrain.model.db.entities.EntityExistException;
 import com.toga.netbrain.model.db.entities.EntityNotFoundException;
 import com.toga.netbrain.model.db.entities.management.DeviceAgent;
 import com.toga.netbrain.model.db.entities.management.HostAgent;
-import com.toga.netbrain.service.AgentHostInfoResponse;
-import com.toga.netbrain.service.DeleteAgentResponse;
+import com.toga.netbrain.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +87,13 @@ public class HostAgentManager {
         hostAgent.addDeviceAgent(new DeviceAgent(target, username, password));
         nodeEntityRepository.save(hostAgent);
 
-        grpcClient.createAgent(hostAgent.getId(), target, username, password);
+        CreateAgentResponse createAgentResponse = grpcClient.createAgent(hostAgent.getId(), target, username, password);
+
+        if (createAgentResponse.getAck()) {
+            taskExecutor.execute(() -> {
+                runAgentDiscovery(hostAgent.getName(), target);
+            });
+        }
 
     }
 
@@ -107,6 +112,12 @@ public class HostAgentManager {
 
     private void runAgentDiscovery(String host, String agent) {
 
+        NodeDiscoveryResponse response = grpcClient.getAgentInformation(agent);
+
+        for (NetElement netElement : response.getNetElementsList()) {
+            String uri = netElement.getURI();
+
+        }
 
 
     }
