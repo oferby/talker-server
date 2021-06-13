@@ -4,7 +4,7 @@ import com.toga.netbrain.model.db.entities.Element;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 
-@Node({"DeviceAgent","Element"})
+@Node
 public class DeviceAgent extends Element {
 
     private String target;

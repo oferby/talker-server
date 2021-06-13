@@ -50,6 +50,7 @@ public class TestNeo4j {
     public void testAddNode() {
 
         Host host = new Host();
+        host.setName("Host1");
         CPU cpu = new CPU();
         Vendor vendor = new Vendor("Intel");
         cpu.setVendor(vendor);
@@ -61,13 +62,13 @@ public class TestNeo4j {
 
         assert id != null;
 
-        Optional<Element> hostById = nodeEntityRepository.findById(id);
+        Optional<Host> hostById = nodeEntityRepository.findHostById(id);
 
         assert hostById.isPresent();
 
-        nodeEntityRepository.deleteById(id);
+        nodeEntityRepository.deleteHostById(id);
 
-        hostById = nodeEntityRepository.findById(id);
+        hostById = nodeEntityRepository.findHostById(id);
 
         assert hostById.isEmpty();
 
@@ -76,11 +77,12 @@ public class TestNeo4j {
     @Test
     public void testBuildChassis() {
 
-        Chassis chassis = new Chassis().setVendor(new Vendor("Cisco"));
+        Chassis chassis = new Chassis();
+        chassis.setVendor(new Vendor("Huawei"));
 
         for (int i = 0; i < 5; i++) {
 
-            LineCard lineCard = new LineCard();
+            LineCard lineCard = new LineCard("lc-" + i);
 
             for (int j = 0; j < 4; j++) {
                 EthernetPort ethernetPort = new EthernetPort();
@@ -90,7 +92,7 @@ public class TestNeo4j {
 
             }
 
-            chassis.addLineCard(lineCard, "lc-" + i);
+            chassis.addLineCard(lineCard);
 
         }
 
@@ -98,13 +100,13 @@ public class TestNeo4j {
         Chassis save = nodeEntityRepository.save(chassis);
         Long id = save.getId();
 
-        Optional<Element> optional = nodeEntityRepository.findById(id);
+        Optional<Chassis> optional = nodeEntityRepository.findChassisById(id);
 
         assert optional.isPresent();
 
-        nodeEntityRepository.deleteById(id);
+        nodeEntityRepository.deleteChassisById(id);
 
-        optional = nodeEntityRepository.findById(id);
+        optional = nodeEntityRepository.findChassisById(id);
 
         assert optional.isEmpty();
 

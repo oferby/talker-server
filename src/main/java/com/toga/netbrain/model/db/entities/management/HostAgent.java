@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Node({"HostAgent","Element"})
+@Node
 public class HostAgent extends Element implements Comparable<HostAgent>{
 
     private String hostName;

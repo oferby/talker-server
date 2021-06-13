@@ -10,6 +10,9 @@ public abstract class Element {
     @Property
     protected String name;
 
+    @Relationship("ROOT_ELEMENT")
+    private Element rootElement;
+
     public Element() {
     }
 
@@ -36,6 +39,14 @@ public abstract class Element {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Element getRootElement() {
+        return rootElement;
+    }
+
+    public void setRootElement(Element rootElement) {
+        this.rootElement = rootElement;
     }
 
     @Override

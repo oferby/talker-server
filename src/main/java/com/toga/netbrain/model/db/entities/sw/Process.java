@@ -2,11 +2,15 @@ package com.toga.netbrain.model.db.entities.sw;
 
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
-@Node({"Process","Element"})
+@Node
 public class Process extends Software {
 
     private Long processId;
+
+    @Relationship
+    private Process parentPrecess;
 
     public Process() {
     }
@@ -26,5 +30,11 @@ public class Process extends Software {
         return this;
     }
 
+    public Process getParentPrecess() {
+        return parentPrecess;
+    }
 
+    public void setParentPrecess(Process parentPrecess) {
+        this.parentPrecess = parentPrecess;
+    }
 }

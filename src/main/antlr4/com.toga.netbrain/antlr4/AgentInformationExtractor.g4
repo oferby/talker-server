@@ -49,9 +49,27 @@ fragment LOWERCASE  : [a-z] ;
 fragment UPPERCASE  : [A-Z] ;
 fragment DIGIT      : [0-9]+ ;
 
+NAME            : 'name';
 
-HOST        : 'host';
-AGENT       : 'agent';
+CHASSIS         : 'chassis';
+HOST            : 'host';
+AGENT           : 'agent';
+LINECARD        : 'linecard';
+INTERFACE       : 'inf';
+ETHERNET        : 'ethernet';
+CPU             : 'cpu';
+MEMORY          : 'memory';
+PROCESS         : 'process';
+MAINBOARD       : 'mainboard';
+OS              : 'os';
+NOS             : 'nos';
+OP_STATUS       : 'op_status';
+ADMIN_STATUS    : 'admin_status';
+VERSION         : 'version';
+VENDOR          : 'vendor';
+
+
+VER_NUMBER      : (DIGIT | '.')+;
 ID          : ( LOWERCASE | UPPERCASE | DIGIT | '_' | '-')+;
 
 BACKSLASH   : [\\] -> skip ;

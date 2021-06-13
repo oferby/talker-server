@@ -14,6 +14,14 @@ public class PortNumberProperty extends RelationshipPropertyElement {
     @TargetNode
     private NetworkInterface networkInterface;
 
+    public PortNumberProperty() {
+    }
+
+    public PortNumberProperty(String portId, NetworkInterface networkInterface) {
+        this.portId = portId;
+        this.networkInterface = networkInterface;
+    }
+
     public String getPortId() {
         return portId;
     }

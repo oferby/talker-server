@@ -3,10 +3,11 @@ package com.toga.netbrain.model.db.entities.hw;
 import com.toga.netbrain.model.db.entities.Element;
 import com.toga.netbrain.model.db.entities.org.Vendor;
 import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 public class Hardware extends Element {
 
-    @Property
+    @Relationship("HAS")
     private Vendor vendor;
 
     @Property
