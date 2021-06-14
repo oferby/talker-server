@@ -61,7 +61,7 @@ public class HostAgentManager {
 
 
     public void addAgent(String target, String username, String password) {
-
+        checkAgent(target);
         List<HostAgent> allHostAgents = nodeEntityRepository.findAllHostAgents();
 
         if (allHostAgents.isEmpty())
@@ -73,7 +73,7 @@ public class HostAgentManager {
     }
 
     public void addAgent(String host, String target, String username, String password) {
-
+        checkAgent(target);
         Optional<HostAgent> hostAgentByName = nodeEntityRepository.findHostAgentByName(host);
 
         if (hostAgentByName.isEmpty())
@@ -87,6 +87,12 @@ public class HostAgentManager {
 
         hostAgent.addDeviceAgent(new DeviceAgent(target, username, password));
         nodeEntityRepository.save(hostAgent);
+        sendAddAgent(hostAgent, target, username, password);
+
+    }
+
+
+    private void sendAddAgent(HostAgent hostAgent, String target, String username, String password) {
 
         CreateAgentResponse createAgentResponse = grpcClient.createAgent(hostAgent.getId(), target, username, password);
 
@@ -96,6 +102,15 @@ public class HostAgentManager {
             });
         }
 
+
+    }
+
+
+    private void checkAgent(String target) {
+        Optional<DeviceAgent> agentOptional = nodeEntityRepository.findDeviceAgentByTarget(target);
+
+        if (agentOptional.isPresent())
+            throw new EntityExistException("Agent already exists.");
     }
 
 
@@ -113,13 +128,15 @@ public class HostAgentManager {
 
     private void runAgentDiscovery(String host, String agent) {
 
+        logger.debug("running discovery for agent: " + agent);
+
         NodeDiscoveryResponse response = grpcClient.getAgentInformation(agent);
 
         for (NetElement netElement : response.getNetElementsList()) {
             String uri = netElement.getURI();
+            logger.debug("URI: " + uri);
 
         }
-
 
     }
 
@@ -129,8 +146,16 @@ public class HostAgentManager {
 
         List<HostAgent> hostAgents = nodeEntityRepository.findAllHostAgents();
         grpcClient.loadAgents(hostAgents);
+        if (!hostAgents.isEmpty()) {
+            for (HostAgent hostAgent : hostAgents) {
+                List<DeviceAgent> deviceAgentList = hostAgent.getDeviceAgentList();
 
+                if (deviceAgentList != null && !deviceAgentList.isEmpty()) {
+                    for (DeviceAgent deviceAgent : deviceAgentList) {
+                        sendAddAgent(hostAgent, deviceAgent.getTarget(), deviceAgent.getUsername(), deviceAgent.getPassword());
+                    }
+                }
+            }
+        }
     }
-
-
 }

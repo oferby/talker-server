@@ -74,7 +74,7 @@ public class TestGrpc {
 //
         NodeDiscoveryResponse response = grpcClient.getAgentInformation(target);
 
-        assert response.getAgentId().equals(target);
+        assert response.getTarget().equals(target);
 
         System.out.println("Node Information:");
 

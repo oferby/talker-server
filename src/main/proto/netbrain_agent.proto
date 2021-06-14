@@ -26,7 +26,7 @@ message HostAgentCommandResponse {
 }
 
 message CreateAgentRequest {
-  string agentId = 1;
+  string target = 1;
   string username = 2;
   string password = 3;
 }
@@ -36,7 +36,7 @@ message CreateAgentResponse {
 }
 
 message DeleteAgentRequest {
-  string agentId = 1;
+  string target = 1;
 }
 
 message DeleteAgentResponse {
@@ -44,11 +44,11 @@ message DeleteAgentResponse {
 }
 
 message NodeDiscoveryRequest {
-  string agentId = 1;
+  string target = 1;
 }
 
 message NodeDiscoveryResponse {
-  string agentId = 1;
+  string target = 1;
   repeated NetElement netElements = 2;
 }
 

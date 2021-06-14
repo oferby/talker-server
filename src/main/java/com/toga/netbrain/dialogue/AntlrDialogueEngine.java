@@ -49,27 +49,34 @@ public class AntlrDialogueEngine implements DialogueEngine {
 
         logger.debug(values.toString());
 
-        switch (values.get("operator")) {
-            case "addNewHostAgent" -> {
-                addHostAgent(values, dialogue);
-            }
-            case "addNewAgent" -> {
-                addNewAgent(values, dialogue);
-            }
-            case "provideUsernameAndPassword" -> {
-                provideUsernameAndPassword(values, dialogue);
+        try {
+
+
+            switch (values.get("operator")) {
+                case "addNewHostAgent" -> {
+                    addHostAgent(values, dialogue);
+                }
+                case "addNewAgent" -> {
+                    addNewAgent(values, dialogue);
+                }
+                case "provideUsernameAndPassword" -> {
+                    provideUsernameAndPassword(values, dialogue);
+                }
+
+                case "shutDownHostAgent" -> {
+                    shutDownHostAgent(values, dialogue);
+                }
+
+                case "deleteAgent" -> {
+                    deleteAgent(values, dialogue);
+                }
+
             }
 
-            case "shutDownHostAgent" -> {
-                shutDownHostAgent(values, dialogue);
-            }
-
-            case "deleteAgent" -> {
-                deleteAgent(values, dialogue);
-            }
-
+        } catch (RuntimeException e) {
+            dialogue.setText(e.getMessage());
+            e.printStackTrace();
         }
-
 
         return dialogue;
     }

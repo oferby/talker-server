@@ -42,6 +42,19 @@ public class TestDialogueEngine {
 
     }
 
+    @Test
+    public void deleteAgent() {
+
+        Dialogue dialogue = new Dialogue();
+        dialogue.setText("delete agent " + target);
+
+        dialogue = dialogueEngine.received(dialogue);
+
+        assert dialogue.getText().equals("agent deleted.");
+
+
+    }
+
 
 
 

@@ -35,7 +35,6 @@ public class GrpcClient {
                 }
             }
         }
-
     }
 
     public AgentHostInfoResponse requestHostAgentInfo(HostAgent hostAgent) {
@@ -66,7 +65,7 @@ public class GrpcClient {
         targetToHostMap.put(targetId, hostAgentId);
 
         CreateAgentRequest createAgentRequest = CreateAgentRequest.newBuilder()
-                .setAgentId(targetId)
+                .setTarget(targetId)
                 .setUsername(username)
                 .setPassword(password)
                 .build();
@@ -84,7 +83,7 @@ public class GrpcClient {
         Long hostId = targetToHostMap.get(targetId);
 
         NodeDiscoveryRequest nodeDiscoveryRequest = NodeDiscoveryRequest.newBuilder()
-                .setAgentId(targetId).build();
+                .setTarget(targetId).build();
 
         NodeDiscoveryResponse response = stubMap.get(hostId).getAgentInformation(nodeDiscoveryRequest);
 
@@ -98,7 +97,7 @@ public class GrpcClient {
 
         Long hostAgentId = targetToHostMap.get(agentId);
 
-        DeleteAgentRequest request = DeleteAgentRequest.newBuilder().setAgentId(agentId).build();
+        DeleteAgentRequest request = DeleteAgentRequest.newBuilder().setTarget(agentId).build();
 
         return stubMap.get(hostAgentId).deleteAgent(request);
 
