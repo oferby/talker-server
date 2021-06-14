@@ -60,9 +60,9 @@ public class TestGrpc {
 
         hostAgentManager.addAgent(hostAgent, target, username, password);
 
-        DeviceAgent deviceAgentByTarget = nodeEntityRepository.findDeviceAgentByTarget(target);
+        Optional<DeviceAgent> deviceAgentByTarget = nodeEntityRepository.findDeviceAgentByTarget(target);
 
-        assert deviceAgentByTarget != null;
+        assert deviceAgentByTarget.isPresent();
 
 
 //    }

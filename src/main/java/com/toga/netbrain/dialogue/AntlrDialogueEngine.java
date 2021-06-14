@@ -90,7 +90,7 @@ public class AntlrDialogueEngine implements DialogueEngine {
 
     private void shutDownHostAgent(Map<String, String> values, Dialogue dialogue) {
 
-        dialogue.getNewContext().put("context", "shutDownHostAgent");
+        dialogue.getContext().put("context", "shutDownHostAgent");
         if (!values.containsKey("host")) {
             dialogue.setText("Please provide host name/IP");
             return;
@@ -106,7 +106,7 @@ public class AntlrDialogueEngine implements DialogueEngine {
 
     private void addHostAgent(Map<String, String> values, Dialogue dialogue) {
 
-        dialogue.getNewContext().put("context", "addHostAgent");
+        dialogue.getContext().put("context", "addHostAgent");
 
         try {
             hostAgentManager.addHostAgent(values.get("host"));
@@ -115,12 +115,14 @@ public class AntlrDialogueEngine implements DialogueEngine {
             return;
         }
 
+        dialogue.getContext().clear();
         dialogue.setText("new host agent added");
     }
 
     private void addNewAgent(Map<String, String> values, Dialogue dialogue) {
 
-        dialogue.getNewContext().put("context", "addNewAgent");
+        dialogue.getContext().put("context", "addNewAgent");
+        dialogue.getContext().put("target", values.get("target"));
 
         if (values.get("username") != null && values.get("password") != null) {
 
@@ -133,12 +135,14 @@ public class AntlrDialogueEngine implements DialogueEngine {
             }
 
             dialogue.setText("new agent added");
+            dialogue.getContext().clear();
 
         } else {
 
             if (values.get("host") != null)
                 dialogue.getContext().put("host", values.get("host"));
             dialogue.setText("please provide username and password");
+            return;
 
         }
 
@@ -151,15 +155,16 @@ public class AntlrDialogueEngine implements DialogueEngine {
         if (dialogue.getContext().containsKey("context") && dialogue.getContext().get("context").equals("addNewAgent")) {
 
             if (dialogue.getContext().get("host") == null) {
-                hostAgentManager.addAgent(values.get("target"),
+                hostAgentManager.addAgent(dialogue.getContext().get("target"),
                         values.get("username"), values.get("password"));
 
             } else {
-                hostAgentManager.addAgent(values.get("host"), values.get("target"),
+                hostAgentManager.addAgent(dialogue.getContext().get("host"), dialogue.getContext().get("target"),
                         values.get("username"), values.get("password"));
             }
 
             dialogue.setText("new agent added");
+            dialogue.getContext().clear();
 
         }
 

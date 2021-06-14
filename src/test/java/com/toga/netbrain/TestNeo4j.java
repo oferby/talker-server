@@ -174,9 +174,9 @@ public class TestNeo4j {
     public void deleteDeviceAgent() {
         nodeEntityRepository.deleteDeviceAgentByTarget("target1");
 
-        DeviceAgent target1 = nodeEntityRepository.findDeviceAgentByTarget("target1");
+        Optional<DeviceAgent> agentByTarget = nodeEntityRepository.findDeviceAgentByTarget("target1");
 
-        assert target1 == null;
+        assert agentByTarget.isEmpty();
     }
 
     @Test

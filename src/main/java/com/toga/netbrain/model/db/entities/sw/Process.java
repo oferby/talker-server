@@ -9,7 +9,7 @@ public class Process extends Software {
 
     private Long processId;
 
-    @Relationship
+    @Relationship("HAS_PARENT")
     private Process parentPrecess;
 
     public Process() {

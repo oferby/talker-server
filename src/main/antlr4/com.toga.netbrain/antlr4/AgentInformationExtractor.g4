@@ -67,6 +67,7 @@ OP_STATUS       : 'op_status';
 ADMIN_STATUS    : 'admin_status';
 VERSION         : 'version';
 VENDOR          : 'vendor';
+SERVICE         : 'service';
 
 
 VER_NUMBER      : (DIGIT | '.')+;

@@ -27,10 +27,12 @@ public class GrpcClient {
 
     public void loadAgents(List<HostAgent> hostAgents) {
 
-        for (HostAgent hostAgent: hostAgents) {
+        for (HostAgent hostAgent : hostAgents) {
             addHostAgentToMap(hostAgent);
-            for (DeviceAgent deviceAgent: hostAgent.getDeviceAgentList()) {
-                targetToHostMap.put(deviceAgent.getTarget(), hostAgent.getId());
+            if (hostAgent.getDeviceAgentList() != null) {
+                for (DeviceAgent deviceAgent : hostAgent.getDeviceAgentList()) {
+                    targetToHostMap.put(deviceAgent.getTarget(), hostAgent.getId());
+                }
             }
         }
 

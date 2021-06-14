@@ -55,7 +55,8 @@ public class HostAgentManager {
             throw new EntityNotFoundException("could not find host to delete");
 
         grpcClient.shutDownHostAgent(hostAgent.get());
-        nodeEntityRepository.delete(hostAgent.get());
+
+        nodeEntityRepository.deleteHostAgentById(hostAgent.get().getId());
     }
 
 
@@ -130,7 +131,6 @@ public class HostAgentManager {
         grpcClient.loadAgents(hostAgents);
 
     }
-
 
 
 }

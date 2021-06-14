@@ -18,14 +18,13 @@ public interface NodeEntityRepository extends Neo4jRepository<Element, Long> {
 
     Optional<HostAgent> findHostAgentByName(String name);
 
-    DeviceAgent findDeviceAgentByTarget(String target);
+    Optional<DeviceAgent> findDeviceAgentByTarget(String target);
 
     @Query("match (n:HostAgent)-[:MANAGE]->(a:DeviceAgent) where n.name=$name detach delete n,a")
     void deleteHostAgent(String name);
 
-    @Query("match (h:HostAgent)-[*]->(x) where id(h)=$id detach delete h,x")
+    @Query("match (h:HostAgent) where id(h)=$id optional match (h)-[*]->(x)  detach delete h,x")
     void deleteHostAgentById(Long id);
-
 
     Optional<Host> findHostById(Long id);
 

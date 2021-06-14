@@ -39,7 +39,7 @@ shutDownHostAgent returns [Map<String,String> values]
     };
 
 addNewAgent returns [Map<String,String> values]
-    : ADD NEW? AGENT ( t=(CHARS | CHARS_AND_DIGITS | IPADDRESS))? (USERNAME u=(CHARS | CHARS_AND_DIGITS))? (PASSWORD p=(CHARS | CHARS_AND_DIGITS))? ( (TO | ON ) HOST? h=(CHARS | CHARS_AND_DIGITS))?
+    : ADD NEW? AGENT t=(CHARS | CHARS_AND_DIGITS | IPADDRESS) (USERNAME u=(CHARS | CHARS_AND_DIGITS))? (PASSWORD p=(CHARS | CHARS_AND_DIGITS))? ( (TO | ON ) HOST? h=(CHARS | CHARS_AND_DIGITS))?
         {
             $values = new HashMap<String,String>();
             $values.put("operator", "addNewAgent");
@@ -50,7 +50,7 @@ addNewAgent returns [Map<String,String> values]
         };
 
 provideUsernameAndPassword returns [Map<String,String> values] :
-    USERNAME u=(CHARS | CHARS_AND_DIGITS) PASSWORD p=(CHARS | CHARS_AND_DIGITS)
+    USERNAME u=(CHARS | CHARS_AND_DIGITS) PASSWORD p=(CHARS | CHARS_AND_DIGITS | NUMBER)
     {
              $values = new HashMap<String,String>();
              $values.put("operator", "provideUsernameAndPassword");
@@ -67,7 +67,7 @@ deleteAgent returns  [Map<String,String> values] :
     };
 
 provideParameter returns [Map<String,String> values] :
-    p=(CHARS | CHARS_AND_DIGITS)
+    p=(CHARS | CHARS_AND_DIGITS | NUMBER)
     {
              $values = new HashMap<String,String>();
              $values.put("operator", "provideParameter");
@@ -80,7 +80,7 @@ provideParameter returns [Map<String,String> values] :
 
 fragment LOWERCASE  : [a-z] ;
 fragment UPPERCASE  : [A-Z] ;
-fragment DIGIT      : [0-9]+ ;
+fragment DIGITS      : [0-9]+ ;
 
 
 AND         : 'and' ;
@@ -113,7 +113,7 @@ HELP        : 'help';
 HOST        : 'host';
 
 IP          : 'ip';
-IPADDRESS   : [1-2]? [0-9]? [0-5] '.' [1-2]? [0-9]? [0-5] '.' [1-2]? [0-9]? [0-5] '.' [1-2]? [0-9]? [0-5];
+IPADDRESS   : ([1-2]? [0-9]? [0-9] '.' [1-2]? [0-9]? [0-9] '.' [1-2]? [0-9]? [0-9] '.' [1-2]? [0-9]? [0-9]);
 
 LENGTH      : 'length';
 LIMIT       : 'limit';
@@ -121,7 +121,7 @@ LIMIT       : 'limit';
 MPLS        : 'mpls';
 MAX         : 'max';
 
-NUMBER      : DIGIT;
+NUMBER      : DIGITS;
 NEW         : 'new';
 
 ON          : 'on';
@@ -149,5 +149,5 @@ WITH        : 'with';
 
 NEWLINE             : ('\r'? '\n' | '\r')+ ;
 CHARS               : ( LOWERCASE | UPPERCASE | '_' )+ ;
-CHARS_AND_DIGITS    : ( LOWERCASE | UPPERCASE | DIGIT | '_' | '-')+ ;
+CHARS_AND_DIGITS    : ( LOWERCASE | UPPERCASE | DIGITS | '_' | '-')+ ;
 WHITESPACE          : ' ' -> skip ;
