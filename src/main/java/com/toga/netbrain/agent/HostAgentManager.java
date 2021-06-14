@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
@@ -98,7 +99,7 @@ public class HostAgentManager {
 
         if (createAgentResponse.getAck()) {
             taskExecutor.execute(() -> {
-                runAgentDiscovery(hostAgent.getName(), target);
+                runAgentDiscovery(target);
             });
         }
 
@@ -126,7 +127,7 @@ public class HostAgentManager {
 
     }
 
-    private void runAgentDiscovery(String host, String agent) {
+    private void runAgentDiscovery(String agent) {
 
         logger.debug("running discovery for agent: " + agent);
 
@@ -140,6 +141,18 @@ public class HostAgentManager {
 
     }
 
+    @Scheduled(fixedRate = 10000)
+    private void runDiscovery() {
+        logger.debug("running discovery scheduler...");
+
+        List<DeviceAgent> deviceAgentList = nodeEntityRepository.findAllDeviceAgents();
+        if (deviceAgentList != null && !deviceAgentList.isEmpty()) {
+            for (DeviceAgent deviceAgent : deviceAgentList) {
+                runAgentDiscovery(deviceAgent.getTarget());
+            }
+
+        }
+    }
 
     @PostConstruct
     private void getAllAgentsFromDB() {
