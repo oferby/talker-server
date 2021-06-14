@@ -17,41 +17,48 @@ public class TestDialogueEngine {
     @Autowired
     private DialogueEngine dialogueEngine;
 
-    private String target = "10.100.99.187";
+    private String[] targets = {"10.100.99.187","10.100.99.11","10.100.99.90"};
 
 
     @Test
     public void testAddAgent() {
 
-        Dialogue dialogue = new Dialogue();
-        dialogue.setText("add agent " + target);
+        for (String target : targets) {
 
-        dialogue = dialogueEngine.received(dialogue);
+            Dialogue dialogue = new Dialogue();
+            dialogue.setText("add agent " + target);
 
-        assert dialogue.getText().equals("please provide username and password");
-        assert dialogue.getContext() !=null;
-        assert dialogue.getContext().containsKey("context");
-        assert dialogue.getContext().get("context").equals("addNewAgent");
-        assert dialogue.getContext().get("target").equals(target);
+            dialogue = dialogueEngine.received(dialogue);
 
-        dialogue.setText("username oferb password 123456");
-        dialogue = dialogueEngine.received(dialogue);
+            assert dialogue.getText().equals("please provide username and password");
+            assert dialogue.getContext() !=null;
+            assert dialogue.getContext().containsKey("context");
+            assert dialogue.getContext().get("context").equals("addNewAgent");
+            assert dialogue.getContext().get("target").equals(target);
 
-        assert dialogue.getText().equals("new agent added");
+            dialogue.setText("username oferb password 123456");
+            dialogue = dialogueEngine.received(dialogue);
 
+            assert dialogue.getText().equals("new agent added");
+
+
+        }
 
     }
 
     @Test
     public void deleteAgent() {
 
-        Dialogue dialogue = new Dialogue();
-        dialogue.setText("delete agent " + target);
+        for (String target : targets) {
 
-        dialogue = dialogueEngine.received(dialogue);
+            Dialogue dialogue = new Dialogue();
+            dialogue.setText("delete agent " + target);
 
-        assert dialogue.getText().equals("agent deleted.");
+            dialogue = dialogueEngine.received(dialogue);
 
+            assert dialogue.getText().equals("agent deleted.");
+
+        }
 
     }
 

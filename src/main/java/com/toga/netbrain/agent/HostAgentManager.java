@@ -1,5 +1,7 @@
 package com.toga.netbrain.agent;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toga.netbrain.agent.grpc.GrpcClient;
 import com.toga.netbrain.model.db.controller.NodeEntityRepository;
 import com.toga.netbrain.model.db.entities.EntityExistException;
@@ -15,7 +17,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -136,10 +140,41 @@ public class HostAgentManager {
         for (NetElement netElement : response.getNetElementsList()) {
             String uri = netElement.getURI();
             logger.debug("URI: " + uri);
-
+            Map<String, Object> result = null;
+            try {
+                result = new ObjectMapper().readValue(uri, HashMap.class);
+                handleAgentInfo(result);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
 
     }
+
+
+    private void handleAgentInfo(Map<String, Object> infoMap) {
+
+        String target = infoMap.keySet().iterator().next();
+
+        Optional<DeviceAgent> optionalDeviceAgent = nodeEntityRepository.findDeviceAgentByTarget(target);
+        if (optionalDeviceAgent.isEmpty()) {
+            logger.error("got information for non-existing device agent: " + target);
+            return;
+        }
+
+        DeviceAgent deviceAgent = optionalDeviceAgent.get();
+
+        Map targetMap = (Map) infoMap.get(target);
+        String hostname = (String) targetMap.get("hostname");
+        deviceAgent.setName(hostname);
+
+        nodeEntityRepository.save(deviceAgent);
+
+
+    }
+
+
+
 
     @Scheduled(fixedRate = 10000)
     private void runDiscovery() {
